@@ -1,7 +1,7 @@
 {
   "name": "react-typescript",
   "version": "0.1.0",
-  "description": "React Wrapper to play nicely with typescript",
+  "description": "React wrapper to make it play nicely with typescript.",
   "main": "index.js",
   "scripts": {
     "test": "grunt test"
