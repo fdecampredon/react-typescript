@@ -13,7 +13,7 @@ function ReactComponentBase() {
   this.construct.apply(this, arguments);
 }
 
-ReactComponentBase.applyMixin = function applyMixins(mixins)  {
+ReactComponentBase.applyMixins = function applyMixins(mixins)  {
   mixins = Array.prototype.slice.call(arguments);
   invariant(
       mixins && mixins.length > 0,
