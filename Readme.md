@@ -3,7 +3,7 @@ React Typescript
 
 [React](http://facebook.github.io/react/) wrapper to make it play nicely with typescript.
 
-> warning: react typescript can actualy only be used with commonjs modules and [browserify](http://browserify.org/), if someone does want AMD I'll gladly accept any PR that would packages it for another format.
+> warning: ReactTypescript can actualy only be used with commonjs modules and [browserify](http://browserify.org/), if someone does want AMD I'll gladly accept any PR that would packages it for another format.
 
 Installation
 ============
@@ -60,7 +60,7 @@ HelloMessage.applyMixins({
 
 ## AutoBind Methods
 
-In react, methods are automaticly bound to a component, this is not the case when using ReactTypecript, to activate this behavious you can use the `autoBindMethods` function of react typescript :
+In react, methods are automaticly bound to a component, this is not the case when using ReactTypecript, to activate this behavious you can use the `autoBindMethods` function of ReactTypescript :
 
 ```typescript
 
@@ -90,6 +90,8 @@ class MyButton extends  ReactTypeScript.ReactComponentBase<{ message: string}, a
     }
 }
 ```
+
+> Mixins methods are always automaticly bound
 
 
 
