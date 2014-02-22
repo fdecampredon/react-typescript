@@ -3,7 +3,7 @@ React Typescript
 
 [React](http://facebook.github.io/react/) wrapper to make it play nicely with typescript.
 
-> warning: react typescript can actualy only be used with commonjs module and [browserify](http://browserify.org/), if someone do want AMD I'll gladly accept any PR that would packages it for another format.
+> warning: react typescript can actualy only be used with commonjs modules and [browserify](http://browserify.org/), if someone does want AMD I'll gladly accept any PR that would packages it for another format.
 
 Installation
 ============
@@ -12,7 +12,7 @@ Installation
 npm install react-typescript
 ```
 
-Declarations file for React, React addons, and ReactTypescript can also be found in the declarations folder.
+Declaration files for React, React addons, and ReactTypescript can also be found in the declarations folder.
 
 Usage
 =====
@@ -34,7 +34,7 @@ class HelloMessage extends ReactTypescript.ReactComponentBase<{ name: string; },
 React.renderComponent(new HelloMessage({ name: 'Jhon' }), mountNode);
 ```
 
-the 2 generic type passed to ReactComponentBase correspond to the desired type for the 'props' and 'state' of a react component.
+the 2 generic types passed to ReactComponentBase correspond to the desired type for the 'props' and 'state' of a react component.
 
 ## Mixins
 
@@ -60,7 +60,7 @@ HelloMessage.applyMixins({
 
 ## AutoBind Methods
 
-In react methods are autobounds to a component, this is not the case when using ReactTypecript, to activate this behavious you can use the `autoBindMethods` function of react typescript
+In react, methods are automaticly bound to a component, this is not the case when using ReactTypecript, to activate this behavious you can use the `autoBindMethods` function of react typescript :
 
 ```typescript
 
@@ -71,7 +71,7 @@ class MyComponent extends  ReactTypescript.ReactComponentBase<any, any> {
 ReactTypeScript.autoBindMethods(MyComponent);
 ```
 
-However you can also use the TypeScript way with property assigned to fat arrow function.
+However you can also use the TypeScript way with a property assigned to fat arrow function.
 
 
 
