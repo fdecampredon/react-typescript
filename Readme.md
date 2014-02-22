@@ -64,15 +64,32 @@ In react, methods are automaticly bound to a component, this is not the case whe
 
 ```typescript
 
-class MyComponent extends  ReactTypescript.ReactComponentBase<any, any> {
- //etc ...
+class MyButton extends  ReactTypeScript.ReactComponentBase<{ message: string}, any> {
+    clickHandler(event: React.MouseEvent) {
+        alert(this.props.message);
+    }
+    
+    render() {
+        React.DOM.button({ onClick: this.clickHandler }, 'Click Me');
+    }
 }
 
 ReactTypeScript.autoBindMethods(MyComponent);
 ```
 
-However you can also use the TypeScript way with a property assigned to fat arrow function.
+However you can also use the TypeScript way with a property assigned to fat arrow function: 
 
+```typescript
+class MyButton extends  ReactTypeScript.ReactComponentBase<{ message: string}, any> {
+    clickHandler = (event: React.MouseEvent) => {
+        alert(this.props.message);
+    }
+    
+    render() {
+        React.DOM.button({ onClick: this.clickHandler }, 'Click Me');
+    }
+}
+```
 
 
 
