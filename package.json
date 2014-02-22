@@ -1,0 +1,23 @@
+{
+  "name": "react-typescript",
+  "version": "0.1.0",
+  "description": "React Wrapper to play nicely with typescript",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "keywords": [
+    "react",
+    "typescript"
+  ],
+  "author": "François de Campredon <francois.de.campredon@gmail.com> (https://github.com/fdecampredon)",
+  "license": "Apache Licence V2",
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "browserify": "~3.30.1",
+    "grunt-browserify": "~1.3.1"
+  },
+  "peerDependencies": {
+    "react": "~0.9.x"
+  }
+}
