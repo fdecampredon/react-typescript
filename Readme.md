@@ -70,7 +70,7 @@ class MyButton extends  ReactTypeScript.ReactComponentBase<{ message: string}, a
     }
     
     render() {
-        React.DOM.button({ onClick: this.clickHandler }, 'Click Me');
+        return React.DOM.button({ onClick: this.clickHandler }, 'Click Me');
     }
 }
 
@@ -86,7 +86,7 @@ class MyButton extends  ReactTypeScript.ReactComponentBase<{ message: string}, a
     }
     
     render() {
-        React.DOM.button({ onClick: this.clickHandler }, 'Click Me');
+        return React.DOM.button({ onClick: this.clickHandler }, 'Click Me');
     }
 }
 ```
