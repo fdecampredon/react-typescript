@@ -1065,3 +1065,7 @@ declare module React {
     
 }
 
+
+declare module 'react' {
+    export = React
+}    

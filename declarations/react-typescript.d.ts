@@ -1,7 +1,7 @@
 
 
 
-declare module ReactTypeScript {
+declare module 'react-typescript' {
   class ReactComponentBase<P, S> {
 
     constructor(props: P, childen?: any[]);
@@ -33,7 +33,7 @@ declare module ReactTypeScript {
      * @final
      * @protected
      */
-    setState(nextProps: S, callback: () => void): void
+    setState(nextProps: S, callback?: () => void): void
     replaceState(nextProps: S): void;
     forceUpdate(callback? : () => void): void;
       

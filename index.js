@@ -25,6 +25,10 @@ ReactComponentBase.applyMixin = function applyMixins(mixins)  {
 };
 
 ReactComponentBase.prototype = React.createClass( { render: function () {} }).componentConstructor.prototype;
+if ("production" !== process.env.NODE_ENV) {
+    //debug membrne is really not compatible with our way of doing things
+    ReactComponentBase.prototype = Object.getPrototypeOf(ReactComponentBase.prototype);
+}
 delete ReactComponentBase.prototype.render;
 
 exports.ReactComponentBase = ReactComponentBase;

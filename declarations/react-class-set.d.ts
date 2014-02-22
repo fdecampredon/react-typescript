@@ -1,5 +1,10 @@
 declare module React {
     export module addons {
-        export function classSet(obj: { [className: string]: boolean }): string;
+        export function classSet(obj: any): string;
     }
+}
+
+
+declare module 'react/addons' {
+    export = React
 }
