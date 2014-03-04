@@ -10,7 +10,6 @@ var invariant = require('react/lib/invariant'),
   bindMethod = reactInternal.bindMethod;
     
 function ReactComponentBase() {
-  this.construct.apply(this, arguments);
 }
 
 ReactComponentBase.applyMixins = function applyMixins(mixins)  {
@@ -24,39 +23,31 @@ ReactComponentBase.applyMixins = function applyMixins(mixins)  {
   }
 };
 
-ReactComponentBase.prototype = React.createClass( { render: function () {} }).componentConstructor.prototype;
+/*ReactComponentBase.prototype = React.createClass( { render: function () {} }).componentConstructor.prototype;
 if ("production" !== process.env.NODE_ENV) {
     //debug membrne is really not compatible with our way of doing things
     ReactComponentBase.prototype = Object.getPrototypeOf(ReactComponentBase.prototype);
 }
-delete ReactComponentBase.prototype.render;
+delete ReactComponentBase.prototype.render;*/
 
 exports.ReactComponentBase = ReactComponentBase;
 
-
-function autoBindMethods(constructor) {
-  var proto = constructor.prototype,
-      name;
-
-  
-  for (name in proto) {
-    if (proto.hasOwnProperty(name)) {
-      
-      var property = proto[name],
-        isCompositeComponentMethod = name in ReactCompositeComponentInterface,
-        markedDontBind = property && property.__reactDontBind,
-        isFunction = typeof property === 'function',
-        shouldAutoBind =
-          isFunction &&
-          !isCompositeComponentMethod &&
-          !markedDontBind;
-
-      if (shouldAutoBind) {
-        bindMethod(proto, name, property);
-      }
-    }
-  }
+function toReactComponent(componentClass) {
+    delete componentClass.prototype.constructor;
+    var componentFactory = React.createClass(componentClass.prototype);
+    var typeScriptComponentFactory = function () {
+        var component = componentFactory.apply(this, arguments);
+        componentClass.call(component);
+        return component;
+    };
+    
+    Object.keys(componentFactory).forEach(function (typeScriptComponentFactory, key) {
+        typeScriptComponentFactory[key] = componentFactory[key];
+    });
+    return typeScriptComponentFactory;
+    
 }
 
+exports.toReactComponent = toReactComponent;
 
-exports.autoBindMethods = autoBindMethods;
+

@@ -11,16 +11,16 @@ var ReactTypeScript = require('react-typescript');
 
 var html = React.DOM;
 
-var Input = (function (_super) {
-    __extends(Input, _super);
-    function Input() {
+var InputDefinition = (function (_super) {
+    __extends(InputDefinition, _super);
+    function InputDefinition() {
         _super.apply(this, arguments);
     }
-    Input.prototype.getInitialState = function () {
+    InputDefinition.prototype.getInitialState = function () {
         return { value: 'Hello!' };
     };
 
-    Input.prototype.render = function () {
+    InputDefinition.prototype.render = function () {
         var valueLink = this.linkState('value');
 
         return html.div({}, html.span(null, this.state.value), html.input({
@@ -31,15 +31,16 @@ var Input = (function (_super) {
             }
         }));
     };
-    return Input;
+    return InputDefinition;
 })(ReactTypeScript.ReactComponentBase);
 
-Input.applyMixins(React.addons.LinkedStateMixin);
+InputDefinition.applyMixins(React.addons.LinkedStateMixin);
 
-React.renderComponent(new Input({}), document.getElementById('main'));
+var Input = ReactTypeScript.toReactComponent(InputDefinition);
+
+React.renderComponent(Input({}), document.getElementById('main'));
 
 },{"react-typescript":"OfhcF3","react/addons":5}],"OfhcF3":[function(require,module,exports){
-(function (process){
 /* jshint node:true */
 
 'use strict';
@@ -52,7 +53,6 @@ var invariant = require('react/lib/invariant'),
   bindMethod = reactInternal.bindMethod;
     
 function ReactComponentBase() {
-  this.construct.apply(this, arguments);
 }
 
 ReactComponentBase.applyMixins = function applyMixins(mixins)  {
@@ -66,44 +66,36 @@ ReactComponentBase.applyMixins = function applyMixins(mixins)  {
   }
 };
 
-ReactComponentBase.prototype = React.createClass( { render: function () {} }).componentConstructor.prototype;
+/*ReactComponentBase.prototype = React.createClass( { render: function () {} }).componentConstructor.prototype;
 if ("production" !== process.env.NODE_ENV) {
     //debug membrne is really not compatible with our way of doing things
     ReactComponentBase.prototype = Object.getPrototypeOf(ReactComponentBase.prototype);
 }
-delete ReactComponentBase.prototype.render;
+delete ReactComponentBase.prototype.render;*/
 
 exports.ReactComponentBase = ReactComponentBase;
 
-
-function autoBindMethods(constructor) {
-  var proto = constructor.prototype,
-      name;
-
-  
-  for (name in proto) {
-    if (proto.hasOwnProperty(name)) {
-      
-      var property = proto[name],
-        isCompositeComponentMethod = name in ReactCompositeComponentInterface,
-        markedDontBind = property && property.__reactDontBind,
-        isFunction = typeof property === 'function',
-        shouldAutoBind =
-          isFunction &&
-          !isCompositeComponentMethod &&
-          !markedDontBind;
-
-      if (shouldAutoBind) {
-        bindMethod(proto, name, property);
-      }
-    }
-  }
+function toReactComponent(componentClass) {
+    var componentFactory = React.createClass(componentClass.prototype);
+    delete componentClass.constructor;
+    var typeScriptComponentFactory = function () {
+        var component = componentFactory.apply(this, arguments);
+        componentClass.call(component);
+        return component;
+    };
+    
+    Object.keys(componentFactory).forEach(function (typeScriptComponentFactory, key) {
+        typeScriptComponentFactory[key] = componentFactory[key];
+    });
+    return typeScriptComponentFactory;
+    
 }
 
+exports.toReactComponent = toReactComponent;
 
-exports.autoBindMethods = autoBindMethods;
-}).call(this,require("/Users/kapit/Documents/workspaces/typescript/react-typescript/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"./third_party/react-internal":149,"/Users/kapit/Documents/workspaces/typescript/react-typescript/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":4,"react":148,"react/lib/invariant":126}],"react-typescript":[function(require,module,exports){
+
+
+},{"./third_party/react-internal":149,"react":148,"react/lib/invariant":126}],"react-typescript":[function(require,module,exports){
 module.exports=require('OfhcF3');
 },{}],4:[function(require,module,exports){
 // shim for using process in browser

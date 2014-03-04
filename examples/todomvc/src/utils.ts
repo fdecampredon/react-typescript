@@ -35,7 +35,7 @@ export function extend(...objects: any[]): any {
         var obj = objects[i];
         for (var key in obj) {
             if (obj.hasOwnProperty(key)) {
-                newObj[key] = obj[key];
+                (<any>newObj)[key] = obj[key];
             }
         }
     }

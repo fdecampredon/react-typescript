@@ -7,7 +7,7 @@ var html = React.DOM;
 
 
 
-class Input extends ReactTypeScript.ReactComponentBase<{}, Input.State> {
+class InputDefinition extends ReactTypeScript.ReactComponentBase<{}, State> {
     linkState: (state: string) => any;
     getInitialState() {
         return {value: 'Hello!'};
@@ -29,15 +29,16 @@ class Input extends ReactTypeScript.ReactComponentBase<{}, Input.State> {
         );
     }
 }
-module Input {
-    export interface State {
-        value: string;
-    }
+export interface State {
+    value: string;
 }
 
-Input.applyMixins((<any>React.addons).LinkedStateMixin);
+InputDefinition.applyMixins((<any>React.addons).LinkedStateMixin);
+
+
+var Input =  ReactTypeScript.toReactComponent(InputDefinition);
 
 React.renderComponent(
-    new Input({}),
+    Input({}),
     document.getElementById('main')
 );

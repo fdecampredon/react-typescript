@@ -10,9 +10,9 @@ var html = React.DOM;
 var ESCAPE_KEY = 27;
 var ENTER_KEY = 13;
 
-class TodoItem extends ReactTypeScript.ReactComponentBase<TodoItem.Props, TodoItem.State> {
+export class Definition extends ReactTypeScript.ReactComponentBase<Props, State> {
     
-    get editField() {
+    getEditField() {
         return this.refs && <HTMLInputElement>this.refs['editField'].getDOMNode()
     }
     
@@ -33,8 +33,8 @@ class TodoItem extends ReactTypeScript.ReactComponentBase<TodoItem.Props, TodoIt
         // immediately manipulate the DOM as if the rendering's over. Put it as a
         // callback. Refer to app.js' `edit` method
         this.props.onEdit(() => {
-            this.editField.focus();
-            this.editField.setSelectionRange(this.editField.value.length, this.editField.value.length);
+            this.getEditField().focus();
+            this.getEditField().setSelectionRange(this.getEditField().value.length, this.getEditField().value.length);
         });
         this.setState({editText: this.props.todo.title});
     }
@@ -50,7 +50,7 @@ class TodoItem extends ReactTypeScript.ReactComponentBase<TodoItem.Props, TodoIt
     
     
     handleChange(event: React.SyntheticEvent) {
-        this.setState({editText: this.editField.value});
+        this.setState({editText: this.getEditField().value});
     }
 
     getInitialState() {
@@ -63,7 +63,7 @@ class TodoItem extends ReactTypeScript.ReactComponentBase<TodoItem.Props, TodoIt
      * work correctly (and still be very performant!), we just use it as an example
      * of how little code it takes to get an order of magnitude performance improvement.
      */
-    shouldComponentUpdate(nextProps: TodoItem.Props, nextState: TodoItem.State) {
+    shouldComponentUpdate(nextProps: Props, nextState: State) {
         return (
             nextProps.todo !== this.props.todo ||
             nextProps.editing !== this.props.editing ||
@@ -103,23 +103,19 @@ class TodoItem extends ReactTypeScript.ReactComponentBase<TodoItem.Props, TodoIt
     }
 }
 
-module TodoItem {
-    export interface Props {
-        onSave: (val: string) => void;
-        onDestroy: () => void;
-        onEdit: (callback: () => void)  => void;
-        onCancel: () => void;
-        todo: Todo;
-        onToggle: () => void;
-        editing?: boolean;
-    }
-    
-    export interface State {
-        editText: string
-    }
+export interface Props {
+    onSave: (val: string) => void;
+    onDestroy: () => void;
+    onEdit: (callback: () => void)  => void;
+    onCancel: () => void;
+    todo: Todo;
+    onToggle: () => void;
+    editing?: boolean;
+}
+
+export interface State {
+    editText: string
 }
 
 
-ReactTypeScript.autoBindMethods(TodoItem);
-
-export = TodoItem;
+export var TodoItem = ReactTypeScript.toReactComponent(Definition);

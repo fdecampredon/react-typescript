@@ -6,8 +6,10 @@ import Todo = require('./todo');
 import Utils = require('./utils');
 import routes = require('./routes');
 import TodoModel = require('./todoModel');
-import TodoFooter = require('./footer');
-import TodoItem = require('./todoItem');
+import footer = require('./footer');
+import TodoFooter = footer.TodoFooter;
+import item = require('./todoItem');
+import TodoItem = item.TodoItem;
 
 //todo
 declare var require: any;
@@ -16,15 +18,15 @@ var Router: any = require('director').Router;
 var html = React.DOM;
 var ENTER_KEY = 13;
 
-class TodoApp extends ReactTypeScript.ReactComponentBase<TodoApp.Props, TodoApp.State> {
-    get newField() {
+class TodoAppDefinition extends ReactTypeScript.ReactComponentBase<TodoApp.Props, TodoApp.State> {
+    getNewField() {
         return this.refs && <HTMLInputElement>this.refs['newField'].getDOMNode()
     }
 
     getInitialState() {
         return {
             nowShowing: routes.ALL_TODOS,
-            editing: null
+            editing: ''
         };
     }
     
@@ -43,11 +45,11 @@ class TodoApp extends ReactTypeScript.ReactComponentBase<TodoApp.Props, TodoApp.
             return;
         }
 
-        var val = this.newField.value.trim();
+        var val = this.getNewField().value.trim();
 
         if (val) {
             this.props.model.addTodo(val);
-            this.newField.value = '';
+            this.getNewField().value = '';
         }
 
         return false;
@@ -88,7 +90,7 @@ class TodoApp extends ReactTypeScript.ReactComponentBase<TodoApp.Props, TodoApp.
     }
 
     render() {
-        var footer: TodoFooter;
+        var footer: footer.Definition;
         var main: React.ReactComponent<any, any>;
         var todos = this.props.model.todos;
 
@@ -105,7 +107,7 @@ class TodoApp extends ReactTypeScript.ReactComponentBase<TodoApp.Props, TodoApp.
 
         var todoItems = shownTodos.map(function (todo) {
             return (
-                new TodoItem({
+                TodoItem({
                     key: todo.id,
                     todo: todo,
                     onToggle: () => this.toggle(todo),
@@ -126,7 +128,7 @@ class TodoApp extends ReactTypeScript.ReactComponentBase<TodoApp.Props, TodoApp.
 
         if (activeTodoCount || completedCount) {
             footer =
-                new TodoFooter({
+                TodoFooter({
                     count:activeTodoCount,
                     completedCount: completedCount,
                     nowShowing: this.state.nowShowing,
@@ -171,6 +173,8 @@ class TodoApp extends ReactTypeScript.ReactComponentBase<TodoApp.Props, TodoApp.
     }
 }
 
+var TodoApp = ReactTypeScript.toReactComponent(TodoAppDefinition);
+
 module TodoApp {
     export interface Props {
         model: TodoModel
@@ -186,7 +190,7 @@ var model = new TodoModel('react-todos');
 
 function render() {
     React.renderComponent(
-        new TodoApp({model: model}),
+        TodoApp({model: model}),
         document.getElementById('todoapp')
     );
 }

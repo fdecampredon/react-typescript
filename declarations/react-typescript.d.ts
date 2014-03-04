@@ -70,5 +70,8 @@ declare module 'react-typescript' {
   /**
    * autoBinds method of a class
    */
-  function autoBindMethods(func: Function): void;
+  function toReactComponent<A, C extends ReactComponentBase<any, any>>(
+        component: { new(props: A, children?: any[]):C ;
+        prototype: {props: A} }
+    ): (props: A, ...children: any[]) => C;
 }

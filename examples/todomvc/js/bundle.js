@@ -11,17 +11,19 @@ var ReactTypeScript = require('react-typescript');
 
 var routes = require('./routes');
 var TodoModel = require('./todoModel');
-var TodoFooter = require('./footer');
-var TodoItem = require('./todoItem');
+var footer = require('./footer');
+var TodoFooter = footer.TodoFooter;
+var item = require('./todoItem');
+var TodoItem = item.TodoItem;
 
 var Router = require('director').Router;
 
 var html = React.DOM;
 var ENTER_KEY = 13;
 
-var TodoApp = (function (_super) {
-    __extends(TodoApp, _super);
-    function TodoApp() {
+var TodoAppDefinition = (function (_super) {
+    __extends(TodoAppDefinition, _super);
+    function TodoAppDefinition() {
         _super.apply(this, arguments);
         var _this = this;
         this.handleNewTodoKeyDown = function (event) {
@@ -29,11 +31,11 @@ var TodoApp = (function (_super) {
                 return;
             }
 
-            var val = _this.newField.value.trim();
+            var val = _this.getNewField().value.trim();
 
             if (val) {
                 _this.props.model.addTodo(val);
-                _this.newField.value = '';
+                _this.getNewField().value = '';
             }
 
             return false;
@@ -43,22 +45,18 @@ var TodoApp = (function (_super) {
             _this.props.model.toggleAll(checked);
         };
     }
-    Object.defineProperty(TodoApp.prototype, "newField", {
-        get: function () {
-            return this.refs && this.refs['newField'].getDOMNode();
-        },
-        enumerable: true,
-        configurable: true
-    });
+    TodoAppDefinition.prototype.getNewField = function () {
+        return this.refs && this.refs['newField'].getDOMNode();
+    };
 
-    TodoApp.prototype.getInitialState = function () {
+    TodoAppDefinition.prototype.getInitialState = function () {
         return {
             nowShowing: routes.ALL_TODOS,
-            editing: null
+            editing: ''
         };
     };
 
-    TodoApp.prototype.componentDidMount = function () {
+    TodoAppDefinition.prototype.componentDidMount = function () {
         var _this = this;
         var setState = this.setState;
         var router = Router({
@@ -75,15 +73,15 @@ var TodoApp = (function (_super) {
         router.init('/');
     };
 
-    TodoApp.prototype.toggle = function (todoToToggle) {
+    TodoAppDefinition.prototype.toggle = function (todoToToggle) {
         this.props.model.toggle(todoToToggle);
     };
 
-    TodoApp.prototype.destroy = function (todo) {
+    TodoAppDefinition.prototype.destroy = function (todo) {
         this.props.model.destroy(todo);
     };
 
-    TodoApp.prototype.edit = function (todo, callback) {
+    TodoAppDefinition.prototype.edit = function (todo, callback) {
         // refer to todoItem.js `handleEdit` for the reasoning behind the
         // callback
         this.setState({ editing: todo.id }, function () {
@@ -91,20 +89,20 @@ var TodoApp = (function (_super) {
         });
     };
 
-    TodoApp.prototype.save = function (todoToSave, text) {
+    TodoAppDefinition.prototype.save = function (todoToSave, text) {
         this.props.model.save(todoToSave, text);
         this.setState({ editing: null });
     };
 
-    TodoApp.prototype.cancel = function () {
+    TodoAppDefinition.prototype.cancel = function () {
         this.setState({ editing: null });
     };
 
-    TodoApp.prototype.clearCompleted = function () {
+    TodoAppDefinition.prototype.clearCompleted = function () {
         this.props.model.clearCompleted();
     };
 
-    TodoApp.prototype.render = function () {
+    TodoAppDefinition.prototype.render = function () {
         var _this = this;
         var footer;
         var main;
@@ -123,7 +121,7 @@ var TodoApp = (function (_super) {
 
         var todoItems = shownTodos.map(function (todo) {
             var _this = this;
-            return (new TodoItem({
+            return (TodoItem({
                 key: todo.id,
                 todo: todo,
                 onToggle: function () {
@@ -152,7 +150,7 @@ var TodoApp = (function (_super) {
         var completedCount = todos.length - activeTodoCount;
 
         if (activeTodoCount || completedCount) {
-            footer = new TodoFooter({
+            footer = TodoFooter({
                 count: activeTodoCount,
                 completedCount: completedCount,
                 nowShowing: this.state.nowShowing,
@@ -178,13 +176,15 @@ var TodoApp = (function (_super) {
             autoFocus: true
         })), main, footer));
     };
-    return TodoApp;
+    return TodoAppDefinition;
 })(ReactTypeScript.ReactComponentBase);
+
+var TodoApp = ReactTypeScript.toReactComponent(TodoAppDefinition);
 
 var model = new TodoModel('react-todos');
 
 function render() {
-    React.renderComponent(new TodoApp({ model: model }), document.getElementById('todoapp'));
+    React.renderComponent(TodoApp({ model: model }), document.getElementById('todoapp'));
 }
 
 model.subscribe(render);
@@ -206,12 +206,12 @@ var routes = require('./routes');
 
 var html = React.DOM;
 
-var TodoFooter = (function (_super) {
-    __extends(TodoFooter, _super);
-    function TodoFooter() {
+var Definition = (function (_super) {
+    __extends(Definition, _super);
+    function Definition() {
         _super.apply(this, arguments);
     }
-    TodoFooter.prototype.render = function () {
+    Definition.prototype.render = function () {
         var activeTodoWord = Utils.pluralize(this.props.count, 'item');
         var clearButton = null;
 
@@ -227,10 +227,11 @@ var TodoFooter = (function (_super) {
         var nowShowing = this.props.nowShowing;
         return (html.footer({ id: "footer" }, html.span({ id: "todo-count" }, html.strong(null, this.props.count), " ", activeTodoWord, " left"), html.ul({ id: "filters" }, html.li(null, html.a({ href: "#/", className: cx({ selected: nowShowing === routes.ALL_TODOS }) }, "All")), ' ', html.li(null, html.a({ href: "#/active", className: cx({ selected: nowShowing === routes.ACTIVE_TODOS }) }, "Active")), ' ', html.li(null, html.a({ href: "#/completed", className: cx({ selected: nowShowing === routes.COMPLETED_TODOS }) }, "Completed"))), clearButton));
     };
-    return TodoFooter;
+    return Definition;
 })(ReactTypeScript.ReactComponentBase);
+exports.Definition = Definition;
 
-module.exports = TodoFooter;
+exports.TodoFooter = ReactTypeScript.toReactComponent(Definition);
 
 },{"./routes":3,"./utils":6,"react-typescript":"OfhcF3","react/addons":11}],3:[function(require,module,exports){
 'use strict';
@@ -253,20 +254,16 @@ var html = React.DOM;
 var ESCAPE_KEY = 27;
 var ENTER_KEY = 13;
 
-var TodoItem = (function (_super) {
-    __extends(TodoItem, _super);
-    function TodoItem() {
+var Definition = (function (_super) {
+    __extends(Definition, _super);
+    function Definition() {
         _super.apply(this, arguments);
     }
-    Object.defineProperty(TodoItem.prototype, "editField", {
-        get: function () {
-            return this.refs && this.refs['editField'].getDOMNode();
-        },
-        enumerable: true,
-        configurable: true
-    });
+    Definition.prototype.getEditField = function () {
+        return this.refs && this.refs['editField'].getDOMNode();
+    };
 
-    TodoItem.prototype.handleSubmit = function () {
+    Definition.prototype.handleSubmit = function () {
         var val = this.state.editText.trim();
         if (val) {
             this.props.onSave(val);
@@ -277,20 +274,20 @@ var TodoItem = (function (_super) {
         return false;
     };
 
-    TodoItem.prototype.handleEdit = function () {
+    Definition.prototype.handleEdit = function () {
         var _this = this;
         // react optimizes renders by batching them. This means you can't call
         // parent's `onEdit` (which in this case triggeres a re-render), and
         // immediately manipulate the DOM as if the rendering's over. Put it as a
         // callback. Refer to app.js' `edit` method
         this.props.onEdit(function () {
-            _this.editField.focus();
-            _this.editField.setSelectionRange(_this.editField.value.length, _this.editField.value.length);
+            _this.getEditField().focus();
+            _this.getEditField().setSelectionRange(_this.getEditField().value.length, _this.getEditField().value.length);
         });
         this.setState({ editText: this.props.todo.title });
     };
 
-    TodoItem.prototype.handleKeyDown = function (event) {
+    Definition.prototype.handleKeyDown = function (event) {
         if (event.which === ESCAPE_KEY) {
             this.setState({ editText: this.props.todo.title });
             this.props.onCancel();
@@ -299,11 +296,11 @@ var TodoItem = (function (_super) {
         }
     };
 
-    TodoItem.prototype.handleChange = function (event) {
-        this.setState({ editText: this.editField.value });
+    Definition.prototype.handleChange = function (event) {
+        this.setState({ editText: this.getEditField().value });
     };
 
-    TodoItem.prototype.getInitialState = function () {
+    Definition.prototype.getInitialState = function () {
         return { editText: this.props.todo.title };
     };
 
@@ -313,11 +310,11 @@ var TodoItem = (function (_super) {
     * work correctly (and still be very performant!), we just use it as an example
     * of how little code it takes to get an order of magnitude performance improvement.
     */
-    TodoItem.prototype.shouldComponentUpdate = function (nextProps, nextState) {
+    Definition.prototype.shouldComponentUpdate = function (nextProps, nextState) {
         return (nextProps.todo !== this.props.todo || nextProps.editing !== this.props.editing || nextState.editText !== this.state.editText);
     };
 
-    TodoItem.prototype.render = function () {
+    Definition.prototype.render = function () {
         return (html.li({
             className: React.addons.classSet({
                 completed: this.props.todo.completed,
@@ -337,12 +334,11 @@ var TodoItem = (function (_super) {
             onKeyDown: this.handleKeyDown
         })));
     };
-    return TodoItem;
+    return Definition;
 })(ReactTypeScript.ReactComponentBase);
+exports.Definition = Definition;
 
-ReactTypeScript.autoBindMethods(TodoItem);
-
-module.exports = TodoItem;
+exports.TodoItem = ReactTypeScript.toReactComponent(Definition);
 
 },{"react-typescript":"OfhcF3","react/addons":11}],5:[function(require,module,exports){
 'use strict';
@@ -477,8 +473,9 @@ function extend() {
 }
 exports.extend = extend;
 
+},{}],"react-typescript":[function(require,module,exports){
+module.exports=require('OfhcF3');
 },{}],"OfhcF3":[function(require,module,exports){
-(function (process){
 /* jshint node:true */
 
 'use strict';
@@ -491,10 +488,9 @@ var invariant = require('react/lib/invariant'),
   bindMethod = reactInternal.bindMethod;
     
 function ReactComponentBase() {
-  this.construct.apply(this, arguments);
 }
 
-ReactComponentBase.applyMixin = function applyMixins(mixins)  {
+ReactComponentBase.applyMixins = function applyMixins(mixins)  {
   mixins = Array.prototype.slice.call(arguments);
   invariant(
       mixins && mixins.length > 0,
@@ -505,46 +501,36 @@ ReactComponentBase.applyMixin = function applyMixins(mixins)  {
   }
 };
 
-ReactComponentBase.prototype = React.createClass( { render: function () {} }).componentConstructor.prototype;
+/*ReactComponentBase.prototype = React.createClass( { render: function () {} }).componentConstructor.prototype;
 if ("production" !== process.env.NODE_ENV) {
     //debug membrne is really not compatible with our way of doing things
     ReactComponentBase.prototype = Object.getPrototypeOf(ReactComponentBase.prototype);
 }
-delete ReactComponentBase.prototype.render;
+delete ReactComponentBase.prototype.render;*/
 
 exports.ReactComponentBase = ReactComponentBase;
 
-
-function autoBindMethods(constructor) {
-  var proto = constructor.prototype,
-      name;
-
-  
-  for (name in proto) {
-    if (proto.hasOwnProperty(name)) {
-      
-      var property = proto[name],
-        isCompositeComponentMethod = name in ReactCompositeComponentInterface,
-        markedDontBind = property && property.__reactDontBind,
-        isFunction = typeof property === 'function',
-        shouldAutoBind =
-          isFunction &&
-          !isCompositeComponentMethod &&
-          !markedDontBind;
-
-      if (shouldAutoBind) {
-        bindMethod(proto, name, property);
-      }
-    }
-  }
+function toReactComponent(componentClass) {
+    delete componentClass.prototype.constructor;
+    var componentFactory = React.createClass(componentClass.prototype);
+    var typeScriptComponentFactory = function () {
+        var component = componentFactory.apply(this, arguments);
+        componentClass.call(component);
+        return component;
+    };
+    
+    Object.keys(componentFactory).forEach(function (typeScriptComponentFactory, key) {
+        typeScriptComponentFactory[key] = componentFactory[key];
+    });
+    return typeScriptComponentFactory;
+    
 }
 
+exports.toReactComponent = toReactComponent;
 
-exports.autoBindMethods = autoBindMethods;
-}).call(this,require("/Users/kapit/Documents/workspaces/typescript/react-typescript/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js"))
-},{"./third_party/react-internal":155,"/Users/kapit/Documents/workspaces/typescript/react-typescript/node_modules/browserify/node_modules/insert-module-globals/node_modules/process/browser.js":9,"react":154,"react/lib/invariant":132}],"react-typescript":[function(require,module,exports){
-module.exports=require('OfhcF3');
-},{}],9:[function(require,module,exports){
+
+
+},{"./third_party/react-internal":155,"react":154,"react/lib/invariant":132}],9:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};

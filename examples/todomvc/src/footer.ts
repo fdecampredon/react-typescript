@@ -9,7 +9,8 @@ import routes = require('./routes');
 var html = React.DOM;
 
 
-class TodoFooter extends ReactTypeScript.ReactComponentBase<TodoFooter.Props, TodoFooter.State> {
+
+export class Definition extends ReactTypeScript.ReactComponentBase<Props, {}> {
     render() {
         var activeTodoWord = Utils.pluralize(this.props.count, 'item');
         var clearButton: React.ReactComponent<any, any> = null;
@@ -60,16 +61,12 @@ class TodoFooter extends ReactTypeScript.ReactComponentBase<TodoFooter.Props, To
         );
     }
 }
-
-module TodoFooter {
-    export interface Props {
-        count: number;
-        completedCount: number;
-        onClearCompleted: () => void;
-        nowShowing: string;
-    }
-    export interface State {
-    }
+export interface Props {
+    count: number;
+    completedCount: number;
+    onClearCompleted: () => void;
+    nowShowing: string;
 }
+export var TodoFooter = ReactTypeScript.toReactComponent(Definition);
 
-export = TodoFooter;
+
