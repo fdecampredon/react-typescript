@@ -4,7 +4,7 @@
 declare module 'react-typescript' {
   class ReactComponentBase<P, S> {
 
-    constructor(props: P, childen?: any[]);
+    constructor();
 
     props: P;
     state: S;
@@ -63,15 +63,28 @@ declare module 'react-typescript' {
     private _renderValidatedComponent(): void;
     private _bindAutoBindMethods(): void;
     private _bindAutoBindMethod(): void;
+      
+    private mixins: any;
+    private propTypes: any;
+    private statics: any;
 
     static applyMixins(...mixins: React.ReactMixin<any, any>[]): void;
+    static setPropTypes(propTypes: { [propName: string]: (props: any, propName: string, componentName: string ) => boolean }): void;
+  }
+     
+  //interface to force 'toReactComponent' to be called with a valid react component with a `render` function
+  interface ReactComponent<P, S> extends ReactComponentBase<P, S> {
+      render(): any;
   }
   
   /**
    * autoBinds method of a class
    */
-  function toReactComponent<A, C extends ReactComponentBase<any, any>>(
-        component: { new(props: A, children?: any[]):C ;
-        prototype: {props: A} }
+  function toReactComponent<A, C extends ReactComponent<any, any>>(
+        createReactComponent: { 
+            new(): C ;
+            //just a little trick to make typescript infer valid type on generated factory
+            prototype: {props: A} 
+        }
     ): (props: A, ...children: any[]) => C;
 }
