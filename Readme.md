@@ -8,11 +8,13 @@ React Typescript
 Installation
 ============
 
+react-typescript is dependent on `npm` so just have to install [Node.js](http://nodejs.org/).
 ```
-npm install react-typescript
+npm install git://github.com/fdecampredon/react-typescript.git#no-constructor
+#npm install  react-typescript (not published yet since this is alpha)
 ```
 
-Declaration files for React, React addons, and ReactTypescript can also be found in the declarations folder.
+After installing react-typescript with npm, download the declaration files for React, React addons, and ReactTypescript from /Declaration.
 
 Usage
 =====
