@@ -58,6 +58,24 @@ ReactComponentBase.addPropTypes = function setPropTypes(propTypes)  {
 
 exports.ReactComponentBase = ReactComponentBase;
 
+function toReactComponent(componentClass) {
+    delete componentClass.prototype.constructor;
+    var componentFactory = React.createClass(componentClass.prototype);
+    var typeScriptComponentFactory = function () {
+        var component = componentFactory.apply(this, arguments);
+        componentClass.call(component);
+        return component;
+    };
+
+    Object.keys(componentFactory).forEach(function (typeScriptComponentFactory, key) {
+        typeScriptComponentFactory[key] = componentFactory[key];
+    });
+    return typeScriptComponentFactory;
+
+}
+
+exports.toReactComponent = toReactComponent;
+
 function createReactComponent(componentClass) {
     var proto = componentClass.prototype,
         protoChain = [];
@@ -124,5 +142,3 @@ function createReactComponent(componentClass) {
 }
 
 exports.createReactComponent = createReactComponent;
-
-
