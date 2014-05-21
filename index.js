@@ -31,7 +31,7 @@ ReactComponentBase.prototype = Object.prototype;
 ReactComponentBase.applyMixins = function applyMixins(mixins)  {
     mixins = slice(arguments);
     invariant(
-        this === ReactComponentBase,
+        this !== ReactComponentBase,
         'You should not define mixins on ReactComponentBase'
     );
     
