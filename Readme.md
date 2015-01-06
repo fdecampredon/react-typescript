@@ -1,7 +1,9 @@
+# This repository is outdated and not maintained, it was an experiment more than anything else, you should check [typed-react](https://github.com/Asana/typed-react/)
+
+
 React Typescript
 ================
 
-**This repository is outdated and not maintained, it was an experiment more than anything else, you should check [typed-react](https://github.com/Asana/typed-react/)**
 
 [React](http://facebook.github.io/react/) wrapper to make it play nicely with typescript.
 
