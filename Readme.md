@@ -1,6 +1,8 @@
 React Typescript
 ================
 
+**This repository is outdated and not maintained, it was an experiment more than anything else, you should check [typed-react](https://github.com/Asana/typed-react/)**
+
 [React](http://facebook.github.io/react/) wrapper to make it play nicely with typescript.
 
 > warning: ReactTypescript can actualy only be used with commonjs modules and [browserify](http://browserify.org/), if someone does want AMD I'll gladly accept any PR that would packages it for another format.
